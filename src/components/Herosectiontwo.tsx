@@ -19,10 +19,12 @@ const Hero2 = () => {
       <div className="w-full flex flex-col md:flex-row justify-between items-center mt-8 gap-8">
         {/* Dining Image */}
         <div className="flex flex-col items-center">
-          <img
+          <Image
             src="/images/dining.png"
             alt="Dining Area"
-            className="w-full max-w-xs sm:max-w-sm lg:max-w-md h-auto object-cover"
+            width={300} // Adjust width and height as per your requirement
+            height={200}
+            className="object-cover"
           />
           <h2 className="mt-4 font-semibold text-lg sm:text-xl lg:text-2xl text-[#333333]">
             Dining
@@ -31,10 +33,12 @@ const Hero2 = () => {
 
         {/* Living Room Image */}
         <div className="flex flex-col items-center">
-          <img
+          <Image
             src="/images/living.png"
             alt="Living Room"
-            className="w-full max-w-xs sm:max-w-sm lg:max-w-md h-auto object-cover"
+            width={300}
+            height={200}
+            className="object-cover"
           />
           <h2 className="mt-4 font-semibold text-lg sm:text-xl lg:text-2xl text-[#333333]">
             Living
@@ -43,10 +47,12 @@ const Hero2 = () => {
 
         {/* Bedroom Image */}
         <div className="flex flex-col items-center">
-          <img
+          <Image
             src="/images/bedroom.png"
             alt="Bedroom"
-            className="w-full max-w-xs sm:max-w-sm lg:max-w-md h-auto object-cover"
+            width={300}
+            height={200}
+            className="object-cover"
           />
           <h2 className="mt-4 font-semibold text-lg sm:text-xl lg:text-2xl text-[#333333]">
             Bedroom

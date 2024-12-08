@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Services from "@/components/Service";
-import ContactForm from "@/components/Form";
 import CheckoutForm from "@/components/CheckoutForm";
 
 export default function ShopHero() {
