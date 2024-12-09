@@ -2,7 +2,7 @@ import Image from "next/image";
 
 const CustomComponent = () => {
   return (
-    <div className="w-full h-auto mb-10 px-4 sm:px-10 lg:px-32 flex flex-col md:flex-row items-center justify-between py-8 bg-[#f9f4ef]">
+    <div className="w-full h-auto  px-4 sm:px-10 lg:px-32 flex flex-col md:flex-row items-center justify-between py-8 bg-[#f9f4ef]">
       {/* Text Section */}
       <div className="flex flex-col items-start justify-center w-full md:w-1/3 text-left">
         <h1 className="font-poppins font-bold text-2xl sm:text-3xl lg:text-4xl text-[#333333]">

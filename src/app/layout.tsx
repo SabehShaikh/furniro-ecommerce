@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 
 
 
+
 // Use Poppins font
 const poppins = Poppins({
   subsets: ["latin"],

@@ -1,9 +1,34 @@
 "use client";
+
 import React, { useState } from "react";
 import Image from "next/image";
-import { Star } from "lucide-react";
+import { ChevronRight, MinusIcon, PlusIcon } from "lucide-react";
+import ReactStars from "react-stars";
+import { Facebook, Linkedin, Twitter } from "lucide-react";
 
-const SingleProduct = () => {
+interface ProductDetailPageProps {
+  addToCart: (product: any) => void;
+}
+
+export default function ProductDetailPage({
+  addToCart,
+}: ProductDetailPageProps) {
+  const [quantity, setQuantity] = useState(1);
+  const [activeImage, setActiveImage] = useState("/images/product-sofa.png");
+
+  const MAX_QUANTITY = 5;
+  const productId = "SS001";
+  const productTitle = "Asgaard Sofa";
+  const productPrice = 250000;
+
+  const product = {
+    id: productId,
+    name: productTitle,
+    price: productPrice,
+    quantity: quantity,
+    image: activeImage
+  };
+
   const thumbnails = [
     "/images/product-sofa.png",
     "/images/productImg2.png",
@@ -11,156 +36,220 @@ const SingleProduct = () => {
     "/images/productImg4.png",
   ];
 
-  const galleryImages = [
-    "/images/descriptionImg1.png",
-    "/images/descriptionImg2.png",
-  ];
-
-  const [quantity, setQuantity] = useState(1);
-
-  const increaseQuantity = () => setQuantity(quantity + 1);
-  const decreaseQuantity = () => {
+  const handleQuantityDecrement = () => {
     if (quantity > 1) setQuantity(quantity - 1);
   };
 
-  return (
-    <div className="container mx-auto px-4 py-6 lg:py-12 bg-[#F9F5F0]">
-      {/* Breadcrumb */}
-      <div className="text-sm bg-[#F9F1E7] text-gray-600 py-4 px-4 rounded-md mb-6">
-        <span>Home</span> &gt; <span>Shop</span> &gt;{" "}
-        <span className="font-medium text-black">Asgaard Sofa</span>
-      </div>
+  const handleQuantityIncrement = () => {
+    if (quantity < MAX_QUANTITY) setQuantity(quantity + 1);
+  };
 
-      {/* Main Product Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+  return (
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
+      {/* Breadcrumb Section */}
+      <section className="bg-[#F9F1E7] py-4 px-4 rounded-lg flex items-center space-x-2 overflow-x-auto">
+        <div className="flex items-center space-x-2 whitespace-nowrap">
+          <span className="text-[#9F9F9F]">Home</span>
+          <ChevronRight className="w-4 h-4 text-[#9F9F9F]" />
+          <span className="text-[#9F9F9F]">Shop</span>
+          <ChevronRight className="w-4 h-4 text-[#9F9F9F]" />
+          <span className="font-semibold">Asgaard sofa</span>
+        </div>
+      </section>
+
+      {/* Product Section */}
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
         {/* Left Section: Images */}
-        <div className="flex flex-col items-center">
-          <div className="relative w-full h-[400px] bg-gray-100 rounded-lg overflow-hidden">
-            <Image
-              src="/images/product-sofa.png"
-              alt="Asgaard Sofa"
-              layout="fill"
-              objectFit="contain"
-            />
-          </div>
-          {/* Thumbnails */}
-          <div className="flex mt-4 space-x-3">
-            {thumbnails.map((thumbnail, index) => (
+        <div className="flex flex-col-reverse md:flex-row gap-4 md:gap-8">
+          {/* Thumbnail Images - Mobile: Horizontal, Desktop: Vertical */}
+          <div className="flex md:flex-col overflow-x-auto md:overflow-visible space-x-4 md:space-x-0 md:space-y-4 scrollbar-hide">
+            {thumbnails.map((thumb, index) => (
               <div
                 key={index}
-                className="relative w-20 h-20 bg-gray-100 rounded-md overflow-hidden cursor-pointer"
+                onClick={() => setActiveImage(thumb)}
+                className={`flex-shrink-0 bg-primary-light h-16 w-16 md:h-20 md:w-20 rounded-[8px] cursor-pointer 
+                  ${activeImage === thumb ? "border-2 border-black" : ""}`}
               >
                 <Image
-                  src={thumbnail}
-                  alt={`Thumbnail ${index + 1}`}
-                  layout="fill"
-                  objectFit="contain"
+                  src={thumb}
+                  alt={`Product Thumbnail ${index + 1}`}
+                  width={80}
+                  height={80}
+                  className="object-contain w-full h-full"
                 />
               </div>
             ))}
           </div>
+
+          {/* Main Image */}
+          <div className="flex-grow bg-primary-light rounded-[8px] flex items-center justify-center">
+            <Image
+              src={activeImage}
+              alt="Main Product Image"
+              width={500}
+              height={500}
+              priority
+              className="object-contain max-h-[500px] max-w-full rounded-[10px]"
+            />
+          </div>
         </div>
 
         {/* Right Section: Product Details */}
-        <div className="flex flex-col justify-between">
-          <h1 className="text-2xl lg:text-3xl font-bold text-gray-800 mb-4">
-            Asgaard Sofa
+        <div className="space-y-4">
+          <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal">
+            {productTitle}
           </h1>
-          <p className="text-[#B88E2F] text-xl font-semibold mb-4">
-            Rs. 250,000.00
+          <p className="text-xl md:text-2xl text-customGray font-medium">
+            Rs. {productPrice.toLocaleString()}.00
           </p>
-          <div className="flex items-center mb-4">
-            <div className="flex text-yellow-500">
-              {[...Array(4)].map((_, i) => (
-                <Star key={i} size={24} />
-              ))}
-              <Star size={24} className="text-gray-300" />
-            </div>
-            <p className="text-gray-600 ml-3 text-sm">(4 Customer Reviews)</p>
+
+          {/* Reviews */}
+          <div className="flex items-center space-x-2">
+            <ReactStars count={5} size={24} color2={"#FFC700"} />
+            <p className="text-customGray text-base">5 Customer Reviews</p>
           </div>
-          <p className="text-gray-700 text-sm mb-6 leading-relaxed">
-            Asgaard sofa is one of the loudest speakers in its class. The sleek
-            design combined with a powerful sound system makes it ideal for
-            music enthusiasts and casual living room users alike.
+
+          {/* Description */}
+          <p className="text-customGray text-base leading-relaxed">
+            Setting the bar as one of the loudest speakers in its class, the
+            Kilburn is a compact, stout-hearted hero with a well-balanced audio
+            which boasts a clear midrange and extended highs for a sound that is
+            both articulate and pronounced.
           </p>
-          <div className="flex items-center space-x-4 mb-6">
-            <span className="text-sm font-medium">Colors:</span>
+
+          {/* Size */}
+          <div className="space-y-2">
+            <p className="text-base text-[#9F9F9F] font-semibold">Size</p>
             <div className="flex space-x-2">
-              <div className="w-6 h-6 bg-gray-800 rounded-full cursor-pointer"></div>
-              <div className="w-6 h-6 bg-[#B88E2F] rounded-full cursor-pointer"></div>
-              <div className="w-6 h-6 bg-gray-400 rounded-full cursor-pointer"></div>
+              {["L", "XL", "XS"].map((size) => (
+                <button
+                  key={size}
+                  className="border border-black rounded-full w-10 h-10 text-center hover:bg-black hover:text-white transition-colors"
+                >
+                  {size}
+                </button>
+              ))}
             </div>
           </div>
-          <div className="flex items-center space-x-6 mb-6">
-            <div className="flex items-center border border-gray-300 rounded-md">
-              <button
-                onClick={decreaseQuantity}
-                className="px-3 py-2 text-gray-700"
-              >
-                -
-              </button>
-              <span className="px-4 py-2">{quantity}</span>
-              <button
-                onClick={increaseQuantity}
-                className="px-3 py-2 text-gray-700"
-              >
-                +
-              </button>
+
+          {/* Colors */}
+          <div className="space-y-2">
+            <p className="text-base text-[#9F9F9F] font-semibold">Color</p>
+            <div className="flex space-x-2">
+              {["purple-600", "yellow-600", "black"].map((color) => (
+                <div
+                  key={color}
+                  className={`w-6 h-6 bg-${color} rounded-full cursor-pointer hover:ring-2 hover:ring-offset-2 hover:ring-gray-300`}
+                ></div>
+              ))}
             </div>
-            <button className="px-6 py-2 bg-[#B88E2F] text-white rounded-md">
-              Add To Cart
-            </button>
-            <button className="px-6 py-2 border border-gray-300 text-gray-800 rounded-md">
-              Compare
-            </button>
           </div>
-          <div className="text-sm text-gray-600">
-            <p>SKU: 55031</p>
-            <p>Category: Sofa</p>
-            <p>Tags: Sofa, Chair, Home, Shop</p>
-          </div>
-        </div>
-      </div>
 
-      {/* Tabs Section */}
-      <div>
-        <ul className="flex border-b text-gray-600 text-sm mb-6">
-          <li className="px-4 py-2 cursor-pointer border-b-2 border-[#B88E2F]">
-            Description
-          </li>
-          <li className="px-4 py-2 cursor-pointer">Additional Information</li>
-          <li className="px-4 py-2 cursor-pointer">Reviews [5]</li>
-        </ul>
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <p className="text-gray-700 text-sm leading-relaxed">
-            Embracing the raw, weathered spirit of rock 'n' roll, the Asgaard
-            sofa takes the unmistakable look and feel of bohemian industrial
-            upholstery to new heights. Its sturdy frame combined with premium
-            materials ensures longevity and comfort for all living spaces.
-          </p>
-        </div>
-      </div>
-
-      {/* Gallery Section */}
-      <div className="mt-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-          {galleryImages.map((image, index) => (
-            <div
-              key={index}
-              className="relative w-full h-[200px] bg-gray-100 rounded-lg overflow-hidden"
-            >
-              <Image
-                src={image}
-                alt={`Gallery ${index + 1}`}
-                layout="fill"
-                objectFit="contain"
+          {/* Quantity and Buttons */}
+          <div className="flex flex-wrap gap-4 items-center">
+            {/* Quantity Selector */}
+            <div className="inline-flex h-16 px-4 space-x-8 items-center border border-customGray2 rounded-[10px]">
+              <MinusIcon
+                className="cursor-pointer hover:text-gray-500"
+                onClick={handleQuantityDecrement}
+              />
+              <p className="font-semibold select-none">{quantity}</p>
+              <PlusIcon
+                className="cursor-pointer hover:text-gray-500"
+                onClick={handleQuantityIncrement}
               />
             </div>
+
+            {/* Action Buttons */}
+            <div className="flex space-x-4">
+              <button
+                onClick={() => addToCart(product)}
+                className="bg-black text-white px-6 py-3 rounded-[10px] hover:bg-gray-800 transition-colors"
+              >
+                Add to Cart
+              </button>
+              <button className="border border-black text-black px-6 py-3 rounded-[10px] hover:bg-black hover:text-white transition-colors">
+                + Compare
+              </button>
+            </div>
+          </div>
+
+          {/* Additional Info */}
+          <div className="text-customGray text-sm space-y-2">
+            <p>
+              <strong>SKU:</strong> {productId}
+            </p>
+            <p>
+              <strong>Category:</strong> Sofas
+            </p>
+            <p>
+              <strong>Tags:</strong> Sofa, Chair, Home, Shop
+            </p>
+            <div className="flex items-center space-x-2">
+              <strong>Share:</strong>
+              <div className="flex space-x-2">
+                {[Facebook, Linkedin, Twitter].map((Icon, index) => (
+                  <a
+                    key={index}
+                    href="#"
+                    className="text-black hover:text-gray-600 transition-colors"
+                  >
+                    <Icon className="w-5 h-5" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Extra Info Section */}
+      <section className="mt-12 pb-10 border-b">
+        {/* Tabs */}
+        <div className="flex justify-center space-x-8 overflow-x-auto">
+          {["Description", "Additional Information", "Reviews [5]"].map(
+            (tab, index) => (
+              <p
+                key={index}
+                className={`text-lg md:text-2xl pb-2 whitespace-nowrap 
+                ${index === 0 ? "text-black font-semibold" : "text-[#9F9F9F]"}`}
+              >
+                {tab}
+              </p>
+            )
+          )}
+        </div>
+
+        {/* Description Text */}
+        <div className="max-w-4xl mx-auto mt-8 space-y-4">
+          <p className="text-[#9F9F9F] text-center text-base leading-relaxed">
+            Embodying the raw, wayward spirit of rock 'n' roll, the Kilburn
+            portable active stereo speaker takes the unmistakable look and sound
+            of Marshall, unplugs the chords, and takes the show on the road.
+          </p>
+          <p className="text-[#9F9F9F] text-center text-base leading-relaxed">
+            Weighing in under 7 pounds, the Kilburn is a lightweight piece of
+            vintage-styled engineering. Setting the bar as one of the loudest
+            speakers in its class, the Kilburn is a compact, stout-hearted hero
+            with a well-balanced audio which boasts a clear midrange and
+            extended highs for a sound that is both articulate and pronounced.
+          </p>
+        </div>
+
+        {/* Description Images */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          {["descriptionImg1.png", "descriptionImg2.png"].map((img, index) => (
+            <Image
+              key={index}
+              src={`/images/${img}`}
+              alt={`Description Image ${index + 1}`}
+              width={600}
+              height={400}
+              className="rounded-[8px] object-cover w-full"
+            />
           ))}
         </div>
-      </div>
+      </section>
     </div>
   );
-};
-
-export default SingleProduct;
+}

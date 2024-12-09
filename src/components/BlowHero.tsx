@@ -1,5 +1,5 @@
 import React from "react";
-import { Filter, Grid, List } from "lucide-react"; // Import icons
+import { Filter, Grid, List } from "lucide-react";
 
 export default function BlowHero() {
   return (

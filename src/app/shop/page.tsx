@@ -1,9 +1,26 @@
+"use client";
 import Image from "next/image";
 import BlowHero from "@/components/BlowHero";
 import Services from "@/components/Service";
+import { Icon } from "@iconify/react";
+import { useState } from "react";
+import Sidebar from "@/components/CartSideBar";
+
+type Product = {
+  id: number;
+  name: string;
+  image: string;
+  price: number;
+  originalPrice?: number;
+  discount?: number;
+  isSale?: boolean;
+  type: string;
+  tag?: string;
+  quantity: number; // quantity is now required
+};
 
 export default function ShopHero() {
-  const productData = [
+  const productData: Product[] = [
     {
       id: 1,
       name: "Syltherine",
@@ -13,6 +30,7 @@ export default function ShopHero() {
       discount: 30,
       isSale: true,
       type: "Stylish cafe chair",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 2,
@@ -20,6 +38,7 @@ export default function ShopHero() {
       image: "/images/leviosa.png",
       price: 2500000,
       type: "Stylish cafe chair",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 3,
@@ -30,6 +49,7 @@ export default function ShopHero() {
       discount: 50,
       isSale: true,
       type: "Luxury big sofa",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 4,
@@ -38,6 +58,7 @@ export default function ShopHero() {
       price: 500000,
       type: "Outdoor bar table and stool",
       tag: "New",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 5,
@@ -45,6 +66,7 @@ export default function ShopHero() {
       image: "/images/grifo.png",
       price: 1500000,
       type: "Night lamp",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 6,
@@ -53,6 +75,7 @@ export default function ShopHero() {
       price: 150000,
       type: "Small mug",
       tag: "New",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 7,
@@ -63,6 +86,7 @@ export default function ShopHero() {
       discount: 50,
       isSale: true,
       type: "Cute bed set",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 8,
@@ -71,6 +95,7 @@ export default function ShopHero() {
       price: 500000,
       type: "Minimalist flower pot",
       tag: "New",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 9,
@@ -81,6 +106,7 @@ export default function ShopHero() {
       discount: 30,
       isSale: true,
       type: "Stylish cafe chair",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 10,
@@ -88,6 +114,7 @@ export default function ShopHero() {
       image: "/images/leviosa.png",
       price: 2500000,
       type: "Stylish cafe chair",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 11,
@@ -98,6 +125,7 @@ export default function ShopHero() {
       discount: 50,
       isSale: true,
       type: "Luxury big sofa",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 12,
@@ -106,6 +134,7 @@ export default function ShopHero() {
       price: 500000,
       type: "Outdoor bar table and stool",
       tag: "New",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 13,
@@ -113,6 +142,7 @@ export default function ShopHero() {
       image: "/images/grifo.png",
       price: 1500000,
       type: "Night lamp",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 14,
@@ -121,6 +151,7 @@ export default function ShopHero() {
       price: 150000,
       type: "Small mug",
       tag: "New",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 15,
@@ -131,6 +162,7 @@ export default function ShopHero() {
       discount: 50,
       isSale: true,
       type: "Cute bed set",
+      quantity: 0, // quantity initialized as 0
     },
     {
       id: 16,
@@ -139,8 +171,43 @@ export default function ShopHero() {
       price: 500000,
       type: "Minimalist flower pot",
       tag: "New",
+      quantity: 0, // quantity initialized as 0
     },
   ];
+
+  // Local state for the cart and sidebar visibility
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Function to add item to cart and open sidebar
+  const addToCart = (product: Product) => {
+    setCartItems((prev) => {
+      const existingItem = prev.find((item) => item.id === product.id);
+
+      if (existingItem) {
+        // If the item already exists, update its quantity
+        return prev.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 } // Increment quantity
+            : item
+        );
+      } else {
+        // Add the product with quantity 1 if it's not already in the cart
+        return [...prev, { ...product, quantity: 1 }];
+      }
+    });
+    setIsSidebarOpen(true); // Automatically open sidebar when an item is added
+  };
+
+  // Function to remove item from cart
+  const removeItem = (id: string | number) => {
+    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  // Toggle sidebar
+  const toggleCart = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
 
   return (
     <>
@@ -160,16 +227,14 @@ export default function ShopHero() {
           </h5>
         </div>
       </div>
-
       {/* Filters and Sorting */}
       <BlowHero />
-
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 px-4 md:px-8 py-8">
+      <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 px-4 md:px-8">
         {productData.map((product) => (
           <div
             key={product.id}
-            className="bg-[#F4F5F7]  rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300 group"
+            className="bg-[#F4F5F7] rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300 group relative"
           >
             {/* Image Section */}
             <div className="relative">
@@ -180,24 +245,40 @@ export default function ShopHero() {
                 height={225}
                 className="w-full h-64 object-cover"
               />
+              {/* Discount Tag */}
               {product.isSale && (
-                <span className="absolute top-2 right-2 bg-red-500 text-white px-2 py-1 rounded-lg text-xs">
+                <span className="absolute top-2 right-2 bg-[#E97171] text-white px-2 py-1 rounded-lg text-sm">
                   -{product.discount}%
                 </span>
               )}
+              {/* New Tag */}
               {product.tag && (
-                <span className="absolute top-2 right-2 bg-green-500 text-white px-2 py-1 rounded-lg text-xs">
+                <span className="absolute top-2 right-2 bg-[#2EC1AC] text-white px-2 py-1 rounded-lg text-sm">
                   {product.tag}
                 </span>
               )}
-              <button className="absolute inset-x-0 bottom-0 bg-black text-white py-2 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                Add to Cart
-              </button>
+              {/* Hover Actions */}
+              <div className="h-full absolute bottom-0 w-full flex flex-col gap-6 items-center justify-center bg-opacity-0 opacity-0 group-hover:bg-opacity-70 group-hover:opacity-100 bg-[#3A3A3A] transition-opacity duration-300">
+                <button
+                  className="text-[16px] font-medium text-[#B88E2F] bg-white px-8 py-3 rounded-md"
+                  onClick={() => addToCart(product)} // Add to cart and open sidebar
+                >
+                  Add to Cart
+                </button>
+                <div className="flex gap-4 text-white text-sm mt-2">
+                  <button className="flex items-center gap-1 text-[16px] font-semibold">
+                    <Icon icon="gridicons:share" /> Share
+                  </button>
+                  <button className="flex items-center gap-1 text-[16px] font-semibold">
+                    <Icon icon="fluent:arrow-swap-20-regular" /> Compare
+                  </button>
+                </div>
+              </div>
             </div>
 
-            {/* Product Details */}
+            {/* Product Details (Replaced) */}
             <div className="p-4">
-              <h3 className="text-lg font-semibold text-gray-900 truncate">
+              <h3 className="text-lg font-semibold text-gray-900">
                 {product.name}
               </h3>
               <p className="text-sm text-gray-500">{product.type}</p>
@@ -205,15 +286,15 @@ export default function ShopHero() {
                 {product.isSale ? (
                   <div className="flex items-center gap-2">
                     <p className="text-lg font-bold text-gray-900">
-                      Rp {product.price.toLocaleString()}
+                      Rs {product.price.toLocaleString()}
                     </p>
                     <p className="text-sm text-gray-400 line-through">
-                      Rp {product.originalPrice?.toLocaleString()}
+                      Rs {product.originalPrice?.toLocaleString()}
                     </p>
                   </div>
                 ) : (
                   <p className="text-lg font-bold text-gray-900">
-                    Rp {product.price.toLocaleString()}
+                    Rs {product.price.toLocaleString()}
                   </p>
                 )}
               </div>
@@ -221,23 +302,28 @@ export default function ShopHero() {
           </div>
         ))}
       </div>
-
+      {/* Cart Sidebar */}
+      <Sidebar
+        cartOpen={isSidebarOpen}
+        toggleCart={toggleCart}
+        cartItems={cartItems}
+        removeItem={removeItem}
+      />
       {/* Pagination Section */}
-      <div className="flex justify-center items-center gap-[38px] my-8">
-        <button className="px-4 py-2 text-center bg-[#B88E2F] text-white  font-semibold">
+      <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 my-8 px-4">
+        <button className="px-4 py-2 text-center bg-[#B88E2F] text-white font-semibold rounded-md hover:bg-[#9a7825] hover:shadow-lg transition-all duration-300">
           1
         </button>
-        <button className="px-4 py-2 text-center bg-[#F9F1E7] text-gray-700  font-semibold">
+        <button className="px-4 py-2 text-center bg-[#F9F1E7] text-gray-700 font-semibold rounded-md hover:bg-[#e0d4be] hover:text-gray-900 transition-all duration-300">
           2
         </button>
-        <button className="px-4 py-2 text-center bg-[#F9F1E7] text-gray-700  font-semibold">
+        <button className="px-4 py-2 text-center bg-[#F9F1E7] text-gray-700 font-semibold rounded-md hover:bg-[#e0d4be] hover:text-gray-900 transition-all duration-300">
           3
         </button>
-        <button className="px-4 py-2 bg-[#F9F1E7] text-gray-700 rounded-md font-semibold">
+        <button className="px-4 py-2 bg-[#F9F1E7] text-gray-700 rounded-md font-semibold hover:bg-[#e0d4be] hover:text-gray-900 transition-all duration-300">
           Next
         </button>
       </div>
-
       <Services />
     </>
   );

@@ -12,7 +12,7 @@ import Image from "next/image";
 const Navbar = () => {
   return (
     <nav className="py-4 w-full">
-      <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Logo on the Left */}
         <div className="flex items-center space-x-2">
           <Link href="/">
