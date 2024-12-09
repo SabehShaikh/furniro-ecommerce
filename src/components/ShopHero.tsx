@@ -1,7 +1,7 @@
 import React from "react";
 import { Filter, Grid, List } from "lucide-react";
 
-export default function BlowHero() {
+export default function ShopHero() {
   return (
     <div className="w-full h-16 bg-[#F9F1E7] flex items-center justify-between px-3 md:px-6 lg:px-16">
       {/* Left Section */}

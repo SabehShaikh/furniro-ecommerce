@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import BlowHero from "@/components/BlowHero";
+import BlowHero from "@/components/ShopHero";
 import Services from "@/components/Service";
 import { Icon } from "@iconify/react";
 import { useState } from "react";

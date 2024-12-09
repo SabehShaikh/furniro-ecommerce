@@ -55,10 +55,18 @@ const Navbar = () => {
                 </SheetClose>
                 <SheetClose>
                   <Link
-                    href="/about"
+                    href="/"
                     className="text-gray-600 hover:text-gray-800 text-lg"
                   >
                     About
+                  </Link>
+                </SheetClose>
+                <SheetClose>
+                  <Link
+                    href="/blog"
+                    className="text-gray-600 hover:text-gray-800 text-lg"
+                  >
+                    Blog
                   </Link>
                 </SheetClose>
                 <SheetClose>
@@ -114,6 +122,13 @@ const Navbar = () => {
             className="text-black font-medium leading-6 text-[16px]"
           >
             About
+          </Link>
+
+          <Link
+            href="/blog"
+            className="text-black font-medium leading-6 text-[16px]"
+          >
+            Blog
           </Link>
 
           <Link
