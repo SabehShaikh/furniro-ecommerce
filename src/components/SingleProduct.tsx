@@ -59,7 +59,6 @@ export default function ProductDetailPage({
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 mt-8 sm:mt-12">
-      {/* Breadcrumb Section */}
       <section className="bg-[#F9F1E7] py-4 px-4 rounded-lg flex items-center space-x-2 overflow-x-auto">
         <div className="flex items-center space-x-2 whitespace-nowrap">
           <span className="text-[#9F9F9F]">Home</span>
@@ -74,7 +73,6 @@ export default function ProductDetailPage({
       <section className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
         {/* Left Section: Images */}
         <div className="flex flex-col-reverse md:flex-row gap-4 md:gap-8">
-          {/* Thumbnail Images - Mobile: Horizontal, Desktop: Vertical */}
           <div className="flex md:flex-col overflow-x-auto md:overflow-visible space-x-4 md:space-x-0 md:space-y-4 scrollbar-hide">
             {thumbnails.map((thumb, index) => (
               <div
@@ -112,18 +110,18 @@ export default function ProductDetailPage({
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-normal">
             {productTitle}
           </h1>
-          <p className="text-xl md:text-2xl text-customGray font-medium">
+          <p className="text-xl md:text-2xl text- font-medium">
             Rs. {productPrice.toLocaleString()}.00
           </p>
 
           {/* Reviews */}
           <div className="flex items-center space-x-2">
             <ReactStars count={5} size={24} color2={"#FFC700"} />
-            <p className="text-customGray text-base">5 Customer Reviews</p>
+            <p className="text-[#9F9F9F] text-base">5 Customer Reviews</p>
           </div>
 
-          {/* Description */}
-          <p className="text-customGray text-base leading-relaxed">
+          {/* text-[#9F9F9F]
+          <p className="text-[#9F9F9F] text-base leading-relaxed">
             Setting the bar as one of the loudest speakers in its class, the
             Kilburn is a compact, stout-hearted hero with a well-balanced audio
             which boasts a clear midrange and extended highs for a sound that is
@@ -160,8 +158,7 @@ export default function ProductDetailPage({
 
           {/* Quantity and Buttons */}
           <div className="flex flex-wrap gap-4 items-center">
-            {/* Quantity Selector */}
-            <div className="inline-flex h-16 px-4 space-x-8 items-center border border-customGray2 rounded-[10px]">
+            <div className="inline-flex h-16 px-4 space-x-8 items-center border border-[#9F9F9F] rounded-[10px]">
               <MinusIcon
                 className="cursor-pointer hover:text-gray-500"
                 onClick={handleQuantityDecrement}
@@ -173,7 +170,7 @@ export default function ProductDetailPage({
               />
             </div>
 
-            {/* Action Buttons */}
+            {/* Buttons */}
             <div className="flex space-x-4">
               <button
                 onClick={() => addToCart(product)}
@@ -187,8 +184,7 @@ export default function ProductDetailPage({
             </div>
           </div>
 
-          {/* Additional Info */}
-          <div className="text-customGray text-sm space-y-2">
+          <div className="text-[#9F9F9F] text-sm space-y-2">
             <p>
               <strong>SKU:</strong> {productId}
             </p>
@@ -218,7 +214,6 @@ export default function ProductDetailPage({
 
       {/* Extra Info Section */}
       <section className="mt-12 pb-10 border-b">
-        {/* Tabs */}
         <div className="flex justify-center space-x-8 overflow-x-auto">
           {["Description", "Additional Information", "Reviews [5]"].map(
             (tab, index) => (
@@ -233,7 +228,6 @@ export default function ProductDetailPage({
           )}
         </div>
 
-        {/* Description Text */}
         <div className="max-w-4xl mx-auto mt-8 space-y-4">
           <p className="text-[#9F9F9F] text-center text-base leading-relaxed">
             Embodying the raw, wayward spirit of rock 'n' roll, the Kilburn
@@ -249,7 +243,6 @@ export default function ProductDetailPage({
           </p>
         </div>
 
-        {/* Description Images */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
           {["descriptionImg1.png", "descriptionImg2.png"].map((img, index) => (
             <Image

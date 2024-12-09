@@ -7,7 +7,6 @@ import { Textarea } from "./ui/textarea";
 const ContactForm = () => {
   return (
     <div className="container mx-auto px-8 py-12">
-      {/* Header Section */}
       <h2 className="text-4xl font-semibold text-center mb-6">
         Get In Touch With Us
       </h2>
@@ -17,7 +16,6 @@ const ContactForm = () => {
         hesitate!
       </p>
 
-      {/* Layout: Contact Information and Form */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-12">
         {/* Contact Information */}
         <div className="space-y-10">
@@ -67,7 +65,6 @@ const ContactForm = () => {
 
         {/* Contact Form */}
         <form className="space-y-8">
-          {/* Your Name */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Your Name
@@ -79,7 +76,6 @@ const ContactForm = () => {
             />
           </div>
 
-          {/* Email Address */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Email Address
@@ -91,7 +87,6 @@ const ContactForm = () => {
             />
           </div>
 
-          {/* Subject */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Subject
@@ -103,7 +98,6 @@ const ContactForm = () => {
             />
           </div>
 
-          {/* Message */}
           <div>
             <label className="block text-gray-700 font-medium mb-2">
               Message
@@ -114,7 +108,6 @@ const ContactForm = () => {
             ></Textarea>
           </div>
 
-          {/* Submit Button */}
           <Button
             type="submit"
             className="w-[50%] bg-[#B88E2F] text-white font-medium py-3 rounded-md hover:bg-[#A57B1E] transition duration-300"

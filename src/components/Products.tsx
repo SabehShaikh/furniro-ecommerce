@@ -116,15 +116,13 @@ const Product = () => {
         return [...prev, { ...product, quantity: 1 }];
       }
     });
-    setIsSidebarOpen(true); // Automatically open sidebar when an item is added
+    setIsSidebarOpen(true);
   };
 
-  // Function to remove item from cart
   const removeItem = (id: string | number) => {
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // Toggle sidebar
   const toggleCart = () => {
     setIsSidebarOpen(!isSidebarOpen);
   };

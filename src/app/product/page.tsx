@@ -56,7 +56,6 @@ export default function ShopHero() {
       setCartItems([...cartItems, product]);
     }
 
-    // Open the cart sidebar
     setCartOpen(true);
   };
 
@@ -186,7 +185,7 @@ export default function ShopHero() {
             </div>
           ))}
         </div>
-        {/* Show More Button */}
+   
         <button className="mt-8 mx-auto block bg-white border border-[#B88E2F] text-[#B88E2F] py-2 px-6 rounded-md text-sm font-poppins font-semibold text-base leading-[150%]">
           Show More
         </button>

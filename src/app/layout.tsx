@@ -1,18 +1,14 @@
 import type { Metadata } from "next";
-import { Poppins } from "next/font/google"; // Import Poppins font
+import { Poppins } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-
-
-
-// Use Poppins font
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["400", "600", "700"], // You can specify the weights you need
+  weight: ["400", "600", "700"], 
   display: "swap",
-  variable: "--font-poppins", // Set the CSS variable
+  variable: "--font-poppins", 
 });
 
 export const metadata: Metadata = {
