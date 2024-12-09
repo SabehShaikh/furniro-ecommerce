@@ -6,9 +6,17 @@ import { useState } from "react";
 import Sidebar from "@/components/CartSideBar";
 import ProductDetailPage from "@/components/SingleProduct";
 
+interface CartItem {
+  id: number | string;
+  name: string;
+  price: number;
+  quantity: number;
+  image: string;
+}
+
 export default function ShopHero() {
   const [cartOpen, setCartOpen] = useState(false);
-  const [cartItems, setCartItems] = useState([
+  const [cartItems, setCartItems] = useState<CartItem[]>([
     {
       id: 1,
       name: "Asgaard Sofa",
@@ -31,7 +39,7 @@ export default function ShopHero() {
     setCartItems((prevItems) => prevItems.filter((item) => item.id !== id));
   };
 
-  const addToCart = (product: any) => {
+  const addToCart = (product: CartItem) => {
     const existingItem = cartItems.find((item) => item.id === product.id);
 
     if (existingItem) {

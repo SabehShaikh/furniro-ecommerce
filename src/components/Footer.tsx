@@ -1,8 +1,9 @@
 import React from "react";
+import Link from "next/link";
 
 const Footer = () => {
   return (
-    <footer className=" text-gray-700 py-6 sm:py-8 lg:py-10 bg-white">
+    <footer className="text-gray-700 py-6 sm:py-8 lg:py-10 bg-white">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -21,36 +22,24 @@ const Footer = () => {
             <h4 className="font-semibold mb-4 text-gray-800">Links</h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
-                  className="text-base hover:text-gray-900 transition-colors"
-                >
+                <Link href="/" className="text-base hover:text-gray-900 transition-colors">
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-base hover:text-gray-900 transition-colors"
-                >
+                <Link href="/shop" className="text-base hover:text-gray-900 transition-colors">
                   Shop
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-base hover:text-gray-900 transition-colors"
-                >
+                <Link href="/" className="text-base hover:text-gray-900 transition-colors">
                   About
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
-                  className="text-base hover:text-gray-900 transition-colors"
-                >
+                <Link href="/contact" className="text-base hover:text-gray-900 transition-colors">
                   Contact
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -60,28 +49,28 @@ const Footer = () => {
             <h4 className="font-semibold mb-4 text-gray-800">Help</h4>
             <ul className="space-y-3">
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/checkout"
                   className="text-base hover:text-gray-900 transition-colors"
                 >
                   Payment Options
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/"
                   className="text-base hover:text-gray-900 transition-colors"
                 >
                   Returns
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#"
+                <Link
+                  href="/"
                   className="text-base hover:text-gray-900 transition-colors"
                 >
                   Privacy Policies
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -95,7 +84,7 @@ const Footer = () => {
                 placeholder="Enter your email address"
                 className="w-full sm:flex-1 text-sm font-medium text-[#9F9F9F] border-b border-black px-2 py-1 focus:outline-none"
               />
-              <span className="text-black text-sm font-medium leading-tight underline    mt-2 sm:mt-0">
+              <span className="text-black text-sm font-medium leading-tight underline mt-2 sm:mt-0">
                 SUBSCRIBE
               </span>
             </div>

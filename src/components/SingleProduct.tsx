@@ -6,8 +6,21 @@ import { ChevronRight, MinusIcon, PlusIcon } from "lucide-react";
 import ReactStars from "react-stars";
 import { Facebook, Linkedin, Twitter } from "lucide-react";
 
+type Product = {
+  id: number | string;
+  name: string;
+  image: string;
+  price: number;
+  originalPrice?: number;
+  discount?: number;
+  isSale?: boolean;
+  type?: string;
+  tag?: string;
+  quantity: number;
+};
+
 interface ProductDetailPageProps {
-  addToCart: (product: any) => void;
+  addToCart: (product: Product) => void;
 }
 
 export default function ProductDetailPage({
@@ -26,7 +39,7 @@ export default function ProductDetailPage({
     name: productTitle,
     price: productPrice,
     quantity: quantity,
-    image: activeImage
+    image: activeImage,
   };
 
   const thumbnails = [
