@@ -25,6 +25,7 @@ const Hero2 = () => {
             width={300} // Adjust width and height as per your requirement
             height={200}
             className="object-cover"
+            loading="lazy" // Lazy load the image
           />
           <h2 className="mt-4 font-semibold text-lg sm:text-xl lg:text-2xl text-[#333333]">
             Dining
@@ -39,6 +40,7 @@ const Hero2 = () => {
             width={300}
             height={200}
             className="object-cover"
+            loading="lazy" // Lazy load the image
           />
           <h2 className="mt-4 font-semibold text-lg sm:text-xl lg:text-2xl text-[#333333]">
             Living
@@ -53,6 +55,7 @@ const Hero2 = () => {
             width={300}
             height={200}
             className="object-cover"
+            loading="lazy" // Lazy load the image
           />
           <h2 className="mt-4 font-semibold text-lg sm:text-xl lg:text-2xl text-[#333333]">
             Bedroom

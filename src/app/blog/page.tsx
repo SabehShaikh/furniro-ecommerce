@@ -13,6 +13,7 @@ export default function ShopHero() {
           layout="fill"
           objectFit="cover"
           className="absolute inset-0 z-0"
+          priority // Ensures the hero image loads first
         />
         <div className="relative z-10 text-center flex flex-col items-center justify-center h-full w-full">
           <Image
@@ -29,23 +30,25 @@ export default function ShopHero() {
         </div>
       </div>
 
-      
-<Blogs />
-  {/* Pagination Section */}
+      {/* Blogs Component */}
+      <Blogs />
+
+      {/* Pagination Section */}
       <div className="flex flex-wrap justify-center items-center gap-4 md:gap-6 my-8 px-4">
-        <button className="px-4 py-2 text-center bg-[#B88E2F] text-white font-semibold rounded-md hover:bg-[#9a7825] hover:shadow-lg transition-all duration-300">
-          1
-        </button>
-        <button className="px-4 py-2 text-center bg-[#F9F1E7] text-gray-700 font-semibold rounded-md hover:bg-[#e0d4be] hover:text-gray-900 transition-all duration-300">
-          2
-        </button>
-        <button className="px-4 py-2 text-center bg-[#F9F1E7] text-gray-700 font-semibold rounded-md hover:bg-[#e0d4be] hover:text-gray-900 transition-all duration-300">
-          3
-        </button>
+        {[1, 2, 3].map((page) => (
+          <button
+            key={page}
+            className="px-4 py-2 text-center bg-[#F9F1E7] text-gray-700 font-semibold rounded-md hover:bg-[#e0d4be] hover:text-gray-900 transition-all duration-300"
+          >
+            {page}
+          </button>
+        ))}
         <button className="px-4 py-2 bg-[#F9F1E7] text-gray-700 rounded-md font-semibold hover:bg-[#e0d4be] hover:text-gray-900 transition-all duration-300">
           Next
         </button>
       </div>
+
+      {/* Services Component */}
       <Services />
     </>
   );

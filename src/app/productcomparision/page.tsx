@@ -1,8 +1,62 @@
+"use client";
 import Image from "next/image";
 import Services from "@/components/Service";
 import Comparison from "@/components/Comparision";
+import { useState, useEffect } from "react";
+import { client } from "@/sanity/lib/client";
+
+type Product = {
+  _id: string;
+  title: string;
+  productImage: string;
+  price: number;
+  originalPrice: number;
+  discountPercentage: number;
+  isNew: boolean;
+  tags: string[];
+  description?: string;
+  quantity: number;
+};
 
 export default function ShopHero() {
+  const [cartItems, setCartItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [products, setProducts] = useState<Product[]>([]);
+
+  useEffect(() => {
+    // Access localStorage only after component mounts
+    const items = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    setCartItems(items);
+  }, []);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const query = `
+          *[_type == "product"]{
+            _id,
+            title,
+            "productImage": productImage.asset->url,
+            price,
+            originalPrice,
+            discountPercentage, 
+            isNew,
+            tags,
+            description
+          }
+        `;
+        const data: Product[] = await client.fetch(query);
+        setProducts(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
   return (
     <>
       {/* Hero Section */}
@@ -31,7 +85,17 @@ export default function ShopHero() {
         </div>
       </div>
 
-      <Comparison />
+      {/* Conditional Rendering */}
+      {isLoading ? (
+        <div className="flex justify-center items-center py-20">
+          <p>Loading products...</p>
+        </div>
+      ) : (
+        <Comparison
+          cartItems={cartItems}
+          allProducts={products.slice(0, 5)} // Limit to 5 products
+        />
+      )}
 
       <Services />
     </>

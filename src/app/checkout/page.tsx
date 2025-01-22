@@ -1,8 +1,18 @@
+"use client";
 import Image from "next/image";
 import Services from "@/components/Service";
 import CheckoutForm from "@/components/CheckoutForm";
+import { useState, useEffect } from "react";
 
 export default function ShopHero() {
+  const [cartItems, setCartItems] = useState([]);
+
+  useEffect(() => {
+    // Access localStorage only after component mounts
+    const items = JSON.parse(localStorage.getItem("cartItems") || "[]");
+    setCartItems(items);
+  }, []);
+
   return (
     <>
       {/* Hero Section */}
@@ -31,7 +41,7 @@ export default function ShopHero() {
         </div>
       </div>
 
-      <CheckoutForm />
+      <CheckoutForm cartItems={cartItems} />
 
       <Services />
     </>

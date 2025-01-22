@@ -3,21 +3,25 @@ import { Trophy, ShieldCheck, Truck, Headphones } from "lucide-react";
 const Services = () => {
   const services = [
     {
+      id: 1,
       icon: <Trophy size={40} className="text-black" />,
       title: "High Quality",
       description: "Crafted from top materials",
     },
     {
+      id: 2,
       icon: <ShieldCheck size={40} className="text-black" />,
       title: "Warranty Protection",
       description: "Over 2 years",
     },
     {
+      id: 3,
       icon: <Truck size={40} className="text-black" />,
       title: "Free Shipping",
       description: "Order over 150 $",
     },
     {
+      id: 4,
       icon: <Headphones size={40} className="text-black" />,
       title: "24 / 7 Support",
       description: "Dedicated support",
@@ -28,9 +32,9 @@ const Services = () => {
     <div className="bg-[#fdf6ef] py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => (
+          {services.map((service) => (
             <div
-              key={index}
+              key={service.id} 
               className="flex items-start space-x-4 p-4 rounded-lg transition-shadow"
             >
               <div>{service.icon}</div>

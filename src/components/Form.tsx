@@ -4,6 +4,55 @@ import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
 
+// Memoizing static contact information to avoid unnecessary re-renders
+const ContactInfo = React.memo(() => (
+  <div className="space-y-10">
+    {/* Address */}
+    <div className="flex items-start">
+      <MapPin size={24} className="text-black mt-1 mr-4" />
+      <div>
+        <h4 className="text-[16px] md:text-[20px] font-medium">Address</h4>
+        <p className="text-black md:text-[16px] font-[14px]">
+          236 5th St Avenue, New <br /> York NY10000, United <br /> States
+        </p>
+      </div>
+    </div>
+
+    {/* Phone */}
+    <div className="flex items-start">
+      <Phone size={24} className="text-black mt-1 mr-4" />
+      <div>
+        <h4 className="text-[16px] md:text-[20px] font-medium">Phone</h4>
+        <p className="text-black md:text-[16px] font-[14px]">
+          Mobile: (+84) 546-6789
+        </p>
+        <p className="text-black md:text-[16px] font-[14px]">
+          Hotline: (+84) 456-6789
+        </p>
+      </div>
+    </div>
+
+    {/* Working Time */}
+    <div className="flex items-start">
+      <Clock size={24} className="text-black mt-1 mr-4" />
+      <div>
+        <h4 className="text-[16px] md:text-[20px] font-medium">Working Time</h4>
+        <p className="text-black md:text-[16px] font-[14px]">
+          Monday-Friday: 9:00 - 22:00
+        </p>
+        <p className="text-black md:text-[16px] font-[14px]">
+          Saturday-Sunday: 9:00 - 21:00
+        </p>
+      </div>
+    </div>
+  </div>
+
+
+));
+
+ContactInfo.displayName = "ContactInfo";
+
+
 const ContactForm = () => {
   return (
     <div className="container mx-auto px-8 py-12">
@@ -18,50 +67,7 @@ const ContactForm = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 px-12">
         {/* Contact Information */}
-        <div className="space-y-10">
-          {/* Address */}
-          <div className="flex items-start">
-            <MapPin size={24} className="text-black mt-1 mr-4" />
-            <div>
-              <h4 className="text-[16px] md:text-[20px]  font-medium">
-                Address
-              </h4>
-              <p className="text-black md:text-[16px] font-[14px]">
-                236 5th St Avenue, New <br /> York NY10000, United <br /> States
-              </p>
-            </div>
-          </div>
-
-          {/* Phone */}
-          <div className="flex items-start">
-            <Phone size={24} className="text-black mt-1 mr-4" />
-            <div>
-              <h4 className="text-[16px] md:text-[20px]  font-medium">Phone</h4>
-              <p className="text-black md:text-[16px] font-[14px]">
-                Mobile: (+84) 546-6789
-              </p>
-              <p className="text-black md:text-[16px] font-[14px]">
-                Hotline: (+84) 456-6789
-              </p>
-            </div>
-          </div>
-
-          {/* Working Time */}
-          <div className="flex items-start">
-            <Clock size={24} className="text-black mt-1 mr-4" />
-            <div>
-              <h4 className="text-[16px] md:text-[20px]  font-medium">
-                Working Time
-              </h4>
-              <p className="text-black md:text-[16px] font-[14px]">
-                Monday-Friday: 9:00 - 22:00
-              </p>
-              <p className="text-black md:text-[16px] font-[14px]">
-                Saturday-Sunday: 9:00 - 21:00
-              </p>
-            </div>
-          </div>
-        </div>
+        <ContactInfo />
 
         {/* Contact Form */}
         <form className="space-y-8">
@@ -71,6 +77,7 @@ const ContactForm = () => {
             </label>
             <Input
               type="text"
+              required
               placeholder="Your Name"
               className="w-full border border-gray-300 bg-white rounded-md px-4 py-5 focus:ring-1 focus:ring-black focus:outline-none"
             />
@@ -82,6 +89,7 @@ const ContactForm = () => {
             </label>
             <Input
               type="email"
+              required
               placeholder="Email Address"
               className="w-full border border-gray-300 bg-white rounded-md px-4 py-5 focus:ring-1 focus:ring-black focus:outline-none"
             />
@@ -93,6 +101,7 @@ const ContactForm = () => {
             </label>
             <Input
               type="text"
+              required
               placeholder="Subject"
               className="w-full border border-gray-300 bg-white rounded-md px-4 py-5 focus:ring-1 focus:ring-black focus:outline-none"
             />
@@ -104,6 +113,7 @@ const ContactForm = () => {
             </label>
             <Textarea
               placeholder="Message"
+              required
               className="w-full border resize-none border-gray-300 bg-white rounded-md px-4 py-5 focus:ring-1 focus:ring-black focus:outline-none"
             ></Textarea>
           </div>
