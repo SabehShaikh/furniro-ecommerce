@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import { client } from "@/sanity/lib/client";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -11,7 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CreditCard, Building2, Package, ShieldCheck } from "lucide-react";
 import Image from "next/image";
-import { useRouter } from "next/navigation"; 
+import { useRouter } from "next/navigation";
 
 interface CheckoutFormProps {
   cartItems: {
@@ -25,7 +24,7 @@ interface CheckoutFormProps {
 
 const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
   const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
-  const router = useRouter(); 
+  const router = useRouter();
 
   const handlePaymentMethodChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -83,13 +82,20 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
     }
 
     try {
-      // Create the order in Sanity CMS
-      const order = await client.create({
-        _type: "checkout",
+      // Save the order details in localStorage
+      const orderDetails = {
         ...formData,
         cartItems,
         paymentMethod,
-      });
+        orderId: Date.now(), // Using current timestamp as a unique order ID
+      };
+
+      console.log("Saving order to localStorage:", orderDetails);
+
+
+
+      // Store order in localStorage
+      localStorage.setItem("order", JSON.stringify(orderDetails));
 
       // Clear the cart from localStorage
       localStorage.setItem("cart", JSON.stringify([])); // Clear cart
@@ -104,7 +110,7 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
       });
 
       // Redirect to order confirmation page
-      router.push(`/order-confirmation/${order._id}`);
+      router.push(`/order-confirmation/${orderDetails.orderId}`);
 
       // Clear form data after successful submission
       setFormData({

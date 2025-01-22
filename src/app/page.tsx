@@ -12,6 +12,7 @@ export default function Home() {
       <Products />
       <CustomComponent />
       <ShareSetupSection />
+      
     </div>
   );
 }

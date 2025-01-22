@@ -47,7 +47,6 @@ const colorMap: Record<string, string> = {
   black: "bg-black",
 };
 
-
 type Product = {
   _id: string;
   title: string;
@@ -167,7 +166,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="grid md:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Product Image */}
         <Card className="relative border-none shadow-none">
           <CardContent className="p-0">
@@ -259,20 +258,22 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             </div>
           </div>
 
-          {/* Social Media Share Buttons */}
-          <div className="flex space-x-4 mt-4">
-            <Button variant="ghost" className="flex items-center gap-2">
-              <Facebook className="h-5 w-5 text-blue-600" />
-              Share on Facebook
-            </Button>
-            <Button variant="ghost" className="flex items-center gap-2">
-              <Twitter className="h-5 w-5 text-blue-400" />
-              Share on Twitter
-            </Button>
-            <Button variant="ghost" className="flex items-center gap-2">
-              <Instagram className="h-5 w-5 text-pink-500" />
-              Share on Instagram
-            </Button>
+          {/* Social Share */}
+          <div className="flex flex-wrap gap-4 pt-4">
+            {[
+              { Icon: Facebook, color: "text-blue-600", label: "Facebook" },
+              { Icon: Twitter, color: "text-blue-400", label: "Twitter" },
+              { Icon: Instagram, color: "text-pink-500", label: "Instagram" },
+            ].map(({ Icon, color, label }) => (
+              <Button
+                key={label}
+                variant="ghost"
+                className="flex items-center gap-2"
+              >
+                <Icon className={`h-5 w-5 ${color}`} />
+                <span className="hidden sm:inline">Share on {label}</span>
+              </Button>
+            ))}
           </div>
 
           <Separator className="my-6" />

@@ -1,13 +1,13 @@
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
+import React from 'react';
 import { toast } from "react-toastify";
-import { client } from "@/sanity/lib/client";
-import { CheckCircle, CreditCard, Truck, User } from "lucide-react";
-import { Separator } from "@/components/ui/separator";
+import { CheckCircle, CreditCard, Truck, User, Package, Clock, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
 
 interface CartItem {
@@ -18,7 +18,7 @@ interface CartItem {
 }
 
 interface Order {
-  _id: string;
+  orderId: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -40,137 +40,178 @@ interface OrderConfirmationPageProps {
 }
 
 const OrderConfirmationPage = ({ params }: OrderConfirmationPageProps) => {
-  const { id } = params; // Get the order ID from the URL
-  const [order, setOrder] = useState<Order | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [order, setOrder] = React.useState<Order | null>(null);
+  const [loading, setLoading] = React.useState<boolean>(true);
 
-  useEffect(() => {
-    const fetchOrder = async () => {
+  React.useEffect(() => {
+    const fetchOrder = () => {
       try {
-        const orderData = await client.fetch(
-          `*[_type == "checkout" && _id == $id][0]`,
-          { id }
-        );
-        setOrder(orderData);
+        const orderData = JSON.parse(localStorage.getItem("order") || "null");
+        if (orderData && orderData.orderId === Number(params.id)) {
+          setOrder(orderData);
+        } else {
+          toast.error("Order not found.");
+        }
       } catch (error) {
-        toast.error("Failed to fetch order data.");
-        console.error("Error fetching order:", error);
+        toast.error("Failed to load order data.");
+        console.error("Error loading order:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchOrder();
-  }, [id]);
+  }, [params.id]);
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Skeleton className="w-12 h-12" />
+      <div className="flex justify-center items-center min-h-screen p-4">
+        <Card className="w-full max-w-4xl">
+          <CardContent className="p-6 space-y-4">
+            <Skeleton className="h-8 w-3/4 mx-auto" />
+            <Skeleton className="h-24 w-full" />
+            <Skeleton className="h-40 w-full" />
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   if (!order) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p>Order not found.</p>
+      <div className="flex justify-center items-center min-h-screen p-4">
+        <Card className="w-full max-w-md text-center p-6">
+          <CardContent>
+            <p className="text-lg text-muted-foreground">Order not found.</p>
+            <Link href="/">
+              <Button className="mt-4" variant="outline">
+                <ArrowLeft className="mr-2 h-4 w-4" /> Return Home
+              </Button>
+            </Link>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
+  const total = order.cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
   return (
-    <div className="container mx-auto px-4 py-12">
-      <Card className="p-6 shadow-lg rounded-lg">
-        <h1 className="text-3xl font-semibold text-center">
-          Order Confirmation
-        </h1>
-        <div className="mt-6 text-center">
-          <CheckCircle className="w-12 h-12 mx-auto text-green-500" />
-          <h2 className="text-xl font-semibold mt-4">Order ID: {order._id}</h2>
-          <p className="mt-2 text-lg">Thank you for your order!</p>
-          <p className="mt-2">We will process your order shortly.</p>
-        </div>
-
-        <Separator className="my-6" />
-
-        <div className="space-y-6">
-          {/* Billing Information */}
-          <div>
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <User className="w-5 h-5 text-blue-500" /> Billing Information
-            </h3>
-            <div className="space-y-2 mt-2">
-              <p>
-                Name: {order.firstName} {order.lastName}
-              </p>
-              <p>Email: {order.email}</p>
-              <p>Phone: {order.phone}</p>
-              <p>
-                Address: {order.address}, {order.city}, {order.province},{" "}
-                {order.zipCode}, {order.country}
-              </p>
-              <p>Additional Info: {order.additionalInfo || "None"}</p>
+    <div className="min-h-screen bg-gray-50 p-4 md:p-8">
+      <div className="max-w-4xl mx-auto">
+        <Card>
+          <CardHeader>
+            <div className="flex flex-col items-center space-y-4">
+              <div className="rounded-full bg-green-100 p-3">
+                <CheckCircle className="h-12 w-12 text-green-600" />
+              </div>
+              <CardTitle className="text-2xl md:text-3xl text-center">
+                Order Confirmation
+              </CardTitle>
+              <Badge variant="secondary" className="text-lg px-4 py-1">
+                Order #{order.orderId}
+              </Badge>
             </div>
-          </div>
+          </CardHeader>
 
-          {/* Order Items */}
-          <div>
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-yellow-500" /> Order Items
-            </h3>
-            <div className="space-y-2 mt-2">
-              {order.cartItems.map((item) => (
-                <div key={item._id} className="flex justify-between">
-                  <span>{item.title}</span>
-                  <span>
-                    {item.quantity} x Rs. {item.price}
-                  </span>
+          <CardContent className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Customer Information */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <User className="h-5 w-5 text-blue-500" />
+                  <h3 className="font-semibold">Customer Details</h3>
                 </div>
-              ))}
+                <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                  <p>{order.firstName} {order.lastName}</p>
+                  <p className="text-sm text-muted-foreground">{order.email}</p>
+                  <p className="text-sm text-muted-foreground">{order.phone}</p>
+                </div>
+              </div>
+
+              {/* Shipping Information */}
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Truck className="h-5 w-5 text-orange-500" />
+                  <h3 className="font-semibold">Shipping Address</h3>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg space-y-2">
+                  <p>{order.address}</p>
+                  <p>{order.city}, {order.province}</p>
+                  <p>{order.zipCode}, {order.country}</p>
+                </div>
+              </div>
             </div>
-          </div>
 
-          {/* Payment Method */}
-          <div>
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <CreditCard className="w-5 h-5 text-purple-500" /> Payment Method
-            </h3>
-            <p className="mt-2">
-              {order.paymentMethod === "bank-transfer"
-                ? "Direct Bank Transfer"
-                : "Cash on Delivery"}
-            </p>
-          </div>
+            {/* Order Items */}
+            <div className="space-y-4">
+              <div className="flex items-center space-x-2">
+                <Package className="h-5 w-5 text-purple-500" />
+                <h3 className="font-semibold">Order Items</h3>
+              </div>
+              <ScrollArea className="h-[200px] rounded-lg border p-4">
+                <div className="space-y-4">
+                  {order.cartItems.map((item) => (
+                    <div key={item._id} className="flex justify-between items-center">
+                      <div>
+                        <p className="font-medium">{item.title}</p>
+                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                      </div>
+                      <p className="font-medium">Rs. {item.price * item.quantity}</p>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </div>
 
-          {/* Total */}
-          <div>
-            <h3 className="text-lg font-semibold flex items-center gap-2">
-              <Truck className="w-5 h-5 text-orange-500" /> Total
-            </h3>
-            <p className="mt-2">
-              Rs.{" "}
-              {order.cartItems.reduce(
-                (total, item) => total + item.price * item.quantity,
-                0
-              )}
-            </p>
-          </div>
-        </div>
+            {/* Payment Details */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <CreditCard className="h-5 w-5 text-green-500" />
+                  <h3 className="font-semibold">Payment Method</h3>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <Badge variant="outline">
+                    {order.paymentMethod === "bank-transfer" ? "Direct Bank Transfer" : "Cash on Delivery"}
+                  </Badge>
+                </div>
+              </div>
 
-        <Separator className="my-6" />
+              <div className="space-y-4">
+                <div className="flex items-center space-x-2">
+                  <Clock className="h-5 w-5 text-blue-500" />
+                  <h3 className="font-semibold">Estimated Delivery</h3>
+                </div>
+                <div className="bg-gray-50 p-4 rounded-lg">
+                  <p>3-5 Business Days</p>
+                </div>
+              </div>
+            </div>
 
-        <div className="text-center">
-          <Link href="/" className="text-blue-500 underline">
-            <Button
-              className="bg-blue-500 text-white"
-              onClick={() => toast.info("Redirecting to home...")}
-            >
-              Go to Home
-            </Button>
-          </Link>
-        </div>
-      </Card>
+            {/* Order Total */}
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <div className="flex justify-between items-center">
+                <p className="font-semibold">Total Amount</p>
+                <p className="text-xl font-bold">Rs. {total}</p>
+              </div>
+            </div>
+          </CardContent>
+
+          <CardFooter className="flex justify-center p-6">
+            <Link href="/">
+              <Button
+                className="w-full md:w-auto"
+                onClick={() => toast.info("Redirecting to home...")}
+              >
+                <ArrowLeft className="mr-2 h-4 w-4" /> Return to Home
+              </Button>
+            </Link>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 };

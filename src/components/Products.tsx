@@ -24,6 +24,7 @@ type Product = {
 };
 
 const Product = () => {
+
   const [products, setProducts] = useState<Product[]>([]);
   const [cartItems, setCartItems] = useState<Product[]>([]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
