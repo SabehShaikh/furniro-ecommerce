@@ -1,23 +1,39 @@
-'use client'
+"use client";
 
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { CheckCircle, CreditCard, Truck, User, Package, Clock, ArrowLeft } from "lucide-react";
+import {
+  CheckCircle,
+  CreditCard,
+  Truck,
+  User,
+  Package,
+  Clock,
+  ArrowLeft,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import Link from "next/link";
+import { client } from "@/sanity/lib/client"; // Import the Sanity client
 
 interface CartItem {
-  _id: string;
   title: string;
   price: number;
   quantity: number;
+  productImage: string;
 }
 
 interface Order {
+  _id: string;
   orderId: string;
   firstName: string;
   lastName: string;
@@ -40,14 +56,17 @@ interface OrderConfirmationPageProps {
 }
 
 const OrderConfirmationPage = ({ params }: OrderConfirmationPageProps) => {
-  const [order, setOrder] = React.useState<Order | null>(null);
-  const [loading, setLoading] = React.useState<boolean>(true);
+  const [order, setOrder] = useState<Order | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
 
-  React.useEffect(() => {
-    const fetchOrder = () => {
+  useEffect(() => {
+    const fetchOrder = async () => {
       try {
-        const orderData = JSON.parse(localStorage.getItem("order") || "null");
-        if (orderData && orderData.orderId === Number(params.id)) {
+        // Fetch the order from Sanity using the orderId from the URL
+        const query = `*[_type == "checkout" && orderId == "${params.id}"][0]`;
+        const orderData = await client.fetch(query);
+
+        if (orderData) {
           setOrder(orderData);
         } else {
           toast.error("Order not found.");
@@ -59,6 +78,7 @@ const OrderConfirmationPage = ({ params }: OrderConfirmationPageProps) => {
         setLoading(false);
       }
     };
+
     fetchOrder();
   }, [params.id]);
 
@@ -125,7 +145,9 @@ const OrderConfirmationPage = ({ params }: OrderConfirmationPageProps) => {
                   <h3 className="font-semibold">Customer Details</h3>
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg space-y-2">
-                  <p>{order.firstName} {order.lastName}</p>
+                  <p>
+                    {order.firstName} {order.lastName}
+                  </p>
                   <p className="text-sm text-muted-foreground">{order.email}</p>
                   <p className="text-sm text-muted-foreground">{order.phone}</p>
                 </div>
@@ -139,8 +161,12 @@ const OrderConfirmationPage = ({ params }: OrderConfirmationPageProps) => {
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg space-y-2">
                   <p>{order.address}</p>
-                  <p>{order.city}, {order.province}</p>
-                  <p>{order.zipCode}, {order.country}</p>
+                  <p>
+                    {order.city}, {order.province}
+                  </p>
+                  <p>
+                    {order.zipCode}, {order.country}
+                  </p>
                 </div>
               </div>
             </div>
@@ -153,13 +179,20 @@ const OrderConfirmationPage = ({ params }: OrderConfirmationPageProps) => {
               </div>
               <ScrollArea className="h-[200px] rounded-lg border p-4">
                 <div className="space-y-4">
-                  {order.cartItems.map((item) => (
-                    <div key={item._id} className="flex justify-between items-center">
+                  {order.cartItems.map((item, index) => (
+                    <div
+                      key={index}
+                      className="flex justify-between items-center"
+                    >
                       <div>
                         <p className="font-medium">{item.title}</p>
-                        <p className="text-sm text-muted-foreground">Qty: {item.quantity}</p>
+                        <p className="text-sm text-muted-foreground">
+                          Qty: {item.quantity}
+                        </p>
                       </div>
-                      <p className="font-medium">Rs. {item.price * item.quantity}</p>
+                      <p className="font-medium">
+                        Rs. {item.price * item.quantity}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -175,7 +208,9 @@ const OrderConfirmationPage = ({ params }: OrderConfirmationPageProps) => {
                 </div>
                 <div className="bg-gray-50 p-4 rounded-lg">
                   <Badge variant="outline">
-                    {order.paymentMethod === "bank-transfer" ? "Direct Bank Transfer" : "Cash on Delivery"}
+                    {order.paymentMethod === "bank-transfer"
+                      ? "Direct Bank Transfer"
+                      : "Cash on Delivery"}
                   </Badge>
                 </div>
               </div>

@@ -1,6 +1,9 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Textarea } from "./ui/textarea";
@@ -11,6 +14,33 @@ import "react-toastify/dist/ReactToastify.css";
 import { CreditCard, Building2, Package, ShieldCheck } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { client } from "@/sanity/lib/client";
+
+const formSchema = z.object({
+  firstName: z
+    .string()
+    .min(2, { message: "First name must be at least 2 characters." }),
+  lastName: z
+    .string()
+    .min(2, { message: "Last name must be at least 2 characters." }),
+  email: z.string().email({ message: "Invalid email address." }),
+  phone: z
+    .string()
+    .min(10, { message: "Phone number must be at least 10 characters." }),
+  address: z
+    .string()
+    .min(5, { message: "Address must be at least 5 characters." }),
+  city: z.string().min(2, { message: "City must be at least 2 characters." }),
+  province: z
+    .string()
+    .min(2, { message: "Province must be at least 2 characters." }),
+  zipCode: z
+    .string()
+    .min(5, { message: "ZIP code must be at least 5 characters." }),
+  country: z
+    .string()
+    .min(2, { message: "Country must be at least 2 characters." }),
+});
 
 interface CheckoutFormProps {
   cartItems: {
@@ -23,108 +53,64 @@ interface CheckoutFormProps {
 }
 
 const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
-  const [paymentMethod, setPaymentMethod] = useState<string | null>(null);
+  const [paymentMethod, setPaymentMethod] = React.useState<string | null>(null);
   const router = useRouter();
 
-  const handlePaymentMethodChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPaymentMethod(e.target.value);
-  };
-
-  const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
-    address: "",
-    city: "",
-    province: "",
-    zipCode: "",
-    country: "",
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      address: "",
+      city: "",
+      province: "",
+      zipCode: "",
+      country: "",
+    },
   });
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handlePlaceOrder = async () => {
-    const requiredFields = [
-      "firstName",
-      "lastName",
-      "email",
-      "phone",
-      "address",
-      "city",
-      "province",
-      "zipCode",
-      "country",
-    ];
-
-    // Check for empty fields
-    const emptyFields = requiredFields.filter(
-      (field) => !formData[field as keyof typeof formData]
-    );
-
-    // If any required field is empty, show an error
-    if (emptyFields.length > 0) {
-      toast.error("Please fill all required fields!");
-      return;
-    }
-
-    // If no payment method is selected, show an error
+  const onSubmit = async (data: z.infer<typeof formSchema>) => {
     if (!paymentMethod) {
       toast.error("Please select a payment method!");
       return;
     }
 
     try {
-      // Save the order details in localStorage
       const orderDetails = {
-        ...formData,
-        cartItems,
+        _type: "checkout",
+        ...data,
+        cartItems: cartItems.map((item) => ({
+          title: item.title,
+          quantity: item.quantity,
+          price: item.price,
+          productImage: item.productImage,
+        })),
         paymentMethod,
-        orderId: Date.now(), // Using current timestamp as a unique order ID
+        orderId: Date.now().toString(),
       };
 
-      console.log("Saving order to localStorage:", orderDetails);
+      const response = await client.create(orderDetails);
 
+      if (response) {
+        console.log("Order saved to Sanity:", response);
+        localStorage.setItem("cart", JSON.stringify([]));
+        window.dispatchEvent(new Event("cartUpdated"));
 
+        toast.success("Order placed successfully!", {
+          position: "bottom-right",
+          autoClose: 3000,
+        });
 
-      // Store order in localStorage
-      localStorage.setItem("order", JSON.stringify(orderDetails));
-
-      // Clear the cart from localStorage
-      localStorage.setItem("cart", JSON.stringify([])); // Clear cart
-      localStorage.setItem("cartItems", JSON.stringify([])); // Optional: Clear cartItems if you're using that too
-
-      // Optionally, you can dispatch a custom event to update the cart count in the UI
-      window.dispatchEvent(new Event("cartUpdated"));
-
-      toast.success("Order placed successfully!", {
-        position: "bottom-right",
-        autoClose: 3000,
-      });
-
-      // Redirect to order confirmation page
-      router.push(`/order-confirmation/${orderDetails.orderId}`);
-
-      // Clear form data after successful submission
-      setFormData({
-        firstName: "",
-        lastName: "",
-        email: "",
-        phone: "",
-        address: "",
-        city: "",
-        province: "",
-        zipCode: "",
-        country: "",
-      });
-      setPaymentMethod(null);
+        router.push(`/order-confirmation/${orderDetails.orderId}`);
+      } else {
+        throw new Error("Failed to save order to Sanity.");
+      }
     } catch (error) {
       toast.error("Failed to place the order. Please try again.");
       console.error("Error placing order:", error);
@@ -147,7 +133,7 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <form className="space-y-6">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
@@ -156,12 +142,15 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
                 </label>
                 <Input
                   type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
+                  {...register("firstName")}
                   placeholder="First Name"
                   className="w-full border border-gray-300 rounded-md p-4 py-5"
                 />
+                {errors.firstName && (
+                  <p className="text-red-500 text-sm">
+                    {errors.firstName.message}
+                  </p>
+                )}
               </div>
               <div>
                 <label className="block text-gray-700 font-semibold mb-2">
@@ -170,12 +159,15 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
                 </label>
                 <Input
                   type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
+                  {...register("lastName")}
                   placeholder="Last Name"
                   className="w-full border border-gray-300 rounded-md p-4 py-5"
                 />
+                {errors.lastName && (
+                  <p className="text-red-500 text-sm">
+                    {errors.lastName.message}
+                  </p>
+                )}
               </div>
             </div>
             <div>
@@ -185,12 +177,13 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </label>
               <Input
                 type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
+                {...register("email")}
                 placeholder="Email Address"
                 className="w-full border border-gray-300 rounded-md p-4 py-5"
               />
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -199,12 +192,13 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </label>
               <Input
                 type="text"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
+                {...register("phone")}
                 placeholder="Phone"
                 className="w-full border border-gray-300 rounded-md p-4 py-5"
               />
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -213,12 +207,13 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </label>
               <Input
                 type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
+                {...register("address")}
                 placeholder="Street Address"
                 className="w-full border border-gray-300 rounded-md p-4 py-5"
               />
+              {errors.address && (
+                <p className="text-red-500 text-sm">{errors.address.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -227,12 +222,13 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </label>
               <Input
                 type="text"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
+                {...register("city")}
                 placeholder="Town/City"
                 className="w-full border border-gray-300 rounded-md p-4 py-5"
               />
+              {errors.city && (
+                <p className="text-red-500 text-sm">{errors.city.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -241,12 +237,15 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </label>
               <Input
                 type="text"
-                name="province"
-                value={formData.province}
-                onChange={handleChange}
+                {...register("province")}
                 placeholder="Province"
                 className="w-full border border-gray-300 rounded-md p-4 py-5"
               />
+              {errors.province && (
+                <p className="text-red-500 text-sm">
+                  {errors.province.message}
+                </p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -255,12 +254,13 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </label>
               <Input
                 type="text"
-                name="zipCode"
-                value={formData.zipCode}
-                onChange={handleChange}
+                {...register("zipCode")}
                 placeholder="ZIP Code"
                 className="w-full border border-gray-300 rounded-md p-4 py-5"
               />
+              {errors.zipCode && (
+                <p className="text-red-500 text-sm">{errors.zipCode.message}</p>
+              )}
             </div>
             <div>
               <label className="block text-gray-700 font-semibold mb-2">
@@ -269,12 +269,13 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </label>
               <Input
                 type="text"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
+                {...register("country")}
                 placeholder="Country/Region"
                 className="w-full border border-gray-300 rounded-md p-4 py-5"
               />
+              {errors.country && (
+                <p className="text-red-500 text-sm">{errors.country.message}</p>
+              )}
             </div>
 
             <div>
@@ -286,6 +287,12 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
                 className="w-full border border-gray-300 rounded-md p-4 resize-none py-5"
               />
             </div>
+            <Button
+              type="submit"
+              className="w-full bg-[#B88E2F] hover:bg-[#A57B1E] text-white"
+            >
+              <ShieldCheck className="mr-2 h-5 w-5" /> Place Order Securely
+            </Button>
           </form>
         </CardContent>
       </Card>
@@ -307,8 +314,8 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
                   <Image
                     src={item.productImage}
                     alt={item.title}
-                    layout="fill" // Makes the image fill the parent container
-                    objectFit="cover" // Ensures the image is cropped to fit
+                    layout="fill"
+                    objectFit="cover"
                     className="rounded-lg"
                   />
                   <div className="absolute top-0 right-0 bg-gray-900 text-white px-2 py-1 text-sm rounded-bl-lg">
@@ -355,7 +362,7 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
                   name="payment-method"
                   value="bank-transfer"
                   checked={paymentMethod === "bank-transfer"}
-                  onChange={handlePaymentMethodChange}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
                   className="h-4 w-4"
                 />
                 <label htmlFor="bank-transfer" className="flex-1">
@@ -369,7 +376,7 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
                   name="payment-method"
                   value="cash-on-delivery"
                   checked={paymentMethod === "cash-on-delivery"}
-                  onChange={handlePaymentMethodChange}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
                   className="h-4 w-4"
                 />
                 <label htmlFor="cash-on-delivery" className="flex-1">
@@ -378,14 +385,6 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
               </div>
             </div>
           </div>
-          {/* Place Order Button */}{" "}
-          <Button
-            onClick={handlePlaceOrder}
-            className="w-full bg-[#B88E2F] hover:bg-[#A57B1E] text-white"
-          >
-            {" "}
-            <ShieldCheck className="mr-2 h-5 w-5" /> Place Order Securely{" "}
-          </Button>
         </CardContent>
       </Card>
 
