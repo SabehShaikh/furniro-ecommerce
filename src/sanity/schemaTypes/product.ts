@@ -19,10 +19,13 @@ export const product = defineType({
         },
         {
             name: "productImage",
-            type: "image",
-            validation: (rule) => rule.required(),
-            title: "Product Image"
-        },
+            title: "Product Image",
+            type: "image",  // ✅ Correct Type
+            options: {
+              hotspot: true, // Allows cropping
+            },
+          },
+          
         {
             name: "price",
             type: "number",

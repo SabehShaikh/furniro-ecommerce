@@ -311,13 +311,26 @@ const CheckoutForm = ({ cartItems }: CheckoutFormProps) => {
             {cartItems.map((item) => (
               <div key={item._id} className="flex items-center space-x-4 py-4">
                 <div className="h-24 w-24 relative rounded-lg overflow-hidden">
-                  <Image
-                    src={item.productImage}
-                    alt={item.title}
-                    layout="fill"
-                    objectFit="cover"
-                    className="rounded-lg"
-                  />
+                {item.productImage ? (
+  <Image
+    src={item.productImage}
+    alt={item.title}
+    layout="fill"
+    objectFit="cover"
+    className="rounded-lg"
+  />
+) : (
+  <div className="w-full h-full bg-gray-300 flex items-center justify-center rounded-lg">
+    <Image
+      src="/images/fallbackImg.jpg"
+      alt={item.title}
+      layout="fill"
+      objectFit="cover"
+      className="rounded-lg"
+    />
+  </div>
+)}
+
                   <div className="absolute top-0 right-0 bg-gray-900 text-white px-2 py-1 text-sm rounded-bl-lg">
                     {item.quantity}x
                   </div>

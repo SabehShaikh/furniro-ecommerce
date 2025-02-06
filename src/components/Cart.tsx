@@ -53,13 +53,26 @@ const Cart = ({ cartItems, onRemoveItem, onQuantityChange }: CartProps) => {
           >
             {/* Product Image & Name */}
             <div className="col-span-2 sm:col-span-2 flex items-center gap-4 px-2">
-              <Image
-                src={item.productImage}
-                alt={item.title}
-                width={60}
-                height={60}
-                className="rounded-lg"
-              />
+            {item.productImage ? (
+  <Image
+    src={item.productImage}
+    alt={item.title}
+    width={60}
+    height={60}
+    className="rounded-lg object-cover"
+  />
+) : (
+  <div className="w-[60px] h-[60px] bg-gray-300 flex items-center justify-center rounded-lg">
+    <Image
+      src="/images/fallbackImg.jpg"
+      alt={item.title}
+      width={60}
+      height={60}
+      className="rounded-lg object-cover"
+    />
+  </div>
+)}
+
               <p className="font-medium text-[#333333] text-sm sm:text-base">
                 {item.title}
               </p>

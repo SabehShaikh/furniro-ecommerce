@@ -56,7 +56,6 @@ const Comparison = ({ cartItems, allProducts }: ComparisonProps) => {
     };
     return ratings;
   };
-  
 
   // Comparison sections focused on available data
   const sections = [
@@ -119,7 +118,7 @@ const Comparison = ({ cartItems, allProducts }: ComparisonProps) => {
                 <CardContent className="p-4">
                   <div className="relative h-48 bg-[#F9F1E7] rounded-md mb-4">
                     <Image
-                      src={product?.productImage || ""}
+                      src={product?.productImage || "/images/fallbackImg.jpg"}
                       alt={product?.title || ""}
                       layout="fill"
                       objectFit="cover"

@@ -9,7 +9,7 @@ interface SidebarProps {
   cartItems: {
     _id: string;
     title: string;
-    productImage: string;
+    productImage: string | null; // Allow null
     price: number;
     quantity: number;
   }[];
@@ -100,12 +100,25 @@ export default function Sidebar({
                   className="flex gap-4 pb-4 border-b last:border-b-0 relative group"
                 >
                   <div className="relative w-20 h-20 flex-shrink-0">
-                    <Image
-                      src={item.productImage}
-                      alt={item.title}
-                      fill
-                      className="rounded-md object-cover"
-                    />
+                    {/* fall back ui for no */}
+                    {item.productImage ? (
+  <Image
+    src={item.productImage}
+    alt={item.title}
+    fill
+    className="rounded-md object-cover"
+  />
+) : (
+  <div className="w-16 h-16 bg-gray-300 flex items-center justify-center rounded-md">
+    <Image
+      src="/images/fallbackImg.jpg"
+      alt={item.title}
+      width={64}
+      height={64}
+      className="rounded-md object-cover"
+    />
+  </div>
+)}
                   </div>
                   <div className="flex-1 min-w-0">
                     <h3 className="font-medium text-sm line-clamp-2">{item.title}</h3>

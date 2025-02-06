@@ -99,6 +99,7 @@ export default function ShopHero() {
         `;
         const data: Product[] = await client.fetch(query);
         setProducts(data);
+        console.log("Products fetched successfully:", data);
       } catch (error) {
         console.error("Error fetching products:", error);
       } finally {
@@ -258,20 +259,36 @@ export default function ShopHero() {
                 className="cursor-pointer bg-[#F4F5F7] rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300 group relative"
               >
                 <div className="relative">
-                  <Image
-                    src={urlFor(product.productImage).url()}
-                    alt={product.title}
-                    width={300}
-                    height={225}
-                    className="w-full h-64 object-cover"
-                    loading="lazy" // Lazy loading
-                  />
+                  {product.productImage ? (
+                    <Image
+                      src={urlFor(product.productImage).url()} // Get the actual image URL as a string
+                      alt={product.title}
+                      width={300}
+                      height={225}
+                      className="w-full h-64 object-cover"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="w-full h-64 bg-gray-300">
+                      <Image
+                       src="/images/fallbackImg.jpg"
+                        alt={product.title}
+                        width={300}
+                        height={225}
+                        className="w-full 
+      h-64 object-cover"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
 
-                  {product.discountPercentage && (
+                  {/* {product.discountPercentage && (
                     <span className="absolute top-2 right-2 bg-[#E97171] text-white px-2 py-1 rounded-lg text-sm">
                       -{product.discountPercentage}%
                     </span>
-                  )}
+                  )} */}
+
+                  
                   {product.isNew && (
                     <span className="absolute top-2 left-2 bg-[#2EC1AC] text-white px-2 py-1 rounded-lg text-sm">
                       New

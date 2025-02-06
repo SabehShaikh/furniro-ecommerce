@@ -171,19 +171,30 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
         <Card className="relative border-none shadow-none">
           <CardContent className="p-0">
             <div className="relative">
-              <Image
-                src={urlFor(product.productImage).url()}
-                alt={product.title}
-                width={600}
-                height={600}
-                className="rounded-lg w-full h-auto object-cover"
-              />
+            {product.productImage ? (
+                          <Image
+                            src={urlFor(product.productImage).url()} // Get the actual image URL as a string
+                            alt={product.title}
+                            width={600}
+                            height={600}
+                            className="rounded-lg w-full h-auto object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                          <div className="w-full h-64 bg-gray-300">
+                            <Image
+                              src="/images/fallbackImg.jpg"
+                              alt={product.title}
+                              width={600}
+                            height={600}
+                            className="rounded-lg w-full h-auto object-cover"
+                              loading="lazy"
+                            />
+                          </div>
+                        )}
+
               <div className="absolute top-4 right-4 flex flex-col gap-2">
-                {product.discountPercentage && (
-                  <Badge variant="destructive" className="bg-[#E97171]">
-                    -{product.discountPercentage}%
-                  </Badge>
-                )}
+               
                 {product.isNew && (
                   <Badge variant="default" className="bg-[#2EC1AC]">
                     New
@@ -204,11 +215,7 @@ export default function ProductDetails({ params }: { params: { id: string } }) {
             <span className="text-3xl font-bold text-gray-900">
               Rs {product.price.toLocaleString()}
             </span>
-            {product.discountPercentage && (
-              <span className="text-xl text-gray-400 line-through">
-                Rs {product.originalPrice.toLocaleString()}
-              </span>
-            )}
+         
           </div>
 
           {/* Reviews */}

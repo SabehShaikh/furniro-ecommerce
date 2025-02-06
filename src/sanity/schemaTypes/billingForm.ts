@@ -133,5 +133,11 @@ export const checkout = defineType({
       validation: (rule) =>
         rule.required().error("Payment method is required."),
     },
+    {
+      name: "orderId",
+      title: "Order ID",
+      type: "string",
+      validation: (rule) => rule.required().error("Order ID is required."),
+    },
   ],
 });

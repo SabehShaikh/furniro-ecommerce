@@ -13,7 +13,7 @@ import "react-toastify/dist/ReactToastify.css";
 type Product = {
   _id: string;
   title: string;
-  productImage: string;
+  productImage: string | null; // Allow null
   price: number;
   originalPrice: number;
   discountPercentage: number;
@@ -216,25 +216,39 @@ const Product = () => {
                 className="cursor-pointer bg-[#F4F5F7] rounded-lg overflow-hidden hover:shadow-md transition-shadow duration-300 group relative"
               >
                 <div className="relative">
-                  <Image
-                    src={urlFor(product.productImage).url()}
-                    alt={product.title}
-                    width={300}
-                    height={225}
-                    className="w-full h-64 object-cover"
-                    loading="lazy" // Add lazy loading
-                  />
+        {product.productImage ? (
+                          <Image
+                            src={urlFor(product.productImage).url()} // Get the actual image URL as a string
+                            alt={product.title}
+                            width={300}
+                            height={225}
+                            className="w-full h-64 object-cover"
+                            loading="lazy"
+                          />
+                        ) : (
+                       
+                            <Image
+                              src="/images/fallbackImg.jpg"
+                              alt={product.title}
+                              width={300}
+                              height={225}
+                              className="w-full 
+            h-64 object-cover"
+                              loading="lazy"
+                            />
+                        
+                        )}
 
-                  {product.discountPercentage && (
-                    <span className="absolute top-2 right-2 bg-[#E97171] text-white px-2 py-1 rounded-lg text-sm">
-                      -{product.discountPercentage}%
-                    </span>
-                  )}
+
+
+                 
                   {product.isNew && (
                     <span className="absolute top-2 left-2 bg-[#2EC1AC] text-white px-2 py-1 rounded-lg text-sm">
                       New
                     </span>
                   )}
+
+                  
 
                   <div className="h-full absolute bottom-0 w-full flex flex-col gap-6 items-center justify-center bg-opacity-0 opacity-0 group-hover:bg-opacity-70 group-hover:opacity-100 bg-[#3A3A3A] transition-opacity duration-300">
                     {/* Add to Cart Button */}
@@ -248,6 +262,7 @@ const Product = () => {
                       Add to Cart
                     </button>
 
+                 
                     <div className="absolute top-2 right-2 flex items-center">
                       <Icon
                         icon="mdi:heart"
