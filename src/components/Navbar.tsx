@@ -2,9 +2,15 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, Heart, ShoppingCart, User } from "lucide-react";
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Search, Heart, ShoppingCart, User, Settings } from "lucide-react";
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+  SheetClose,
+} from "@/components/ui/sheet";
 import Image from "next/image";
+import { Icon } from "@iconify/react";
 
 const Navbar = () => {
   const [wishlistCount, setWishlistCount] = useState(0);
@@ -73,41 +79,76 @@ const Navbar = () => {
               <div className="flex flex-col items-center py-4 space-y-4">
                 {/* Menu Links */}
                 <SheetClose>
-                  <Link href="/" className="text-gray-600 hover:text-gray-800 text-lg">
+                  <Link
+                    href="/"
+                    className="text-gray-600 hover:text-gray-800 text-lg"
+                  >
                     Home
                   </Link>
                 </SheetClose>
                 <SheetClose>
-                  <Link href="/shop" className="text-gray-600 hover:text-gray-800 text-lg">
+                  <Link
+                    href="/shop"
+                    className="text-gray-600 hover:text-gray-800 text-lg"
+                  >
                     Shop
                   </Link>
                 </SheetClose>
                 <SheetClose>
-                  <Link href="/analytics" className="text-gray-600 hover:text-gray-800 text-lg">
+                  <Link
+                    href="/analytics"
+                    className="text-gray-600 hover:text-gray-800 text-lg"
+                  >
                     Analytics
                   </Link>
                 </SheetClose>
                 <SheetClose>
-                  <Link href="/blog" className="text-gray-600 hover:text-gray-800 text-lg">
+                  <Link
+                    href="/blog"
+                    className="text-gray-600 hover:text-gray-800 text-lg"
+                  >
                     Blog
                   </Link>
                 </SheetClose>
                 <SheetClose>
-                  <Link href="/contact" className="text-gray-600 hover:text-gray-800 text-lg">
+                  <Link
+                    href="/contact"
+                    className="text-gray-600 hover:text-gray-800 text-lg"
+                  >
                     Contact
                   </Link>
                 </SheetClose>
 
                 {/* Icons Section */}
                 <div className="flex space-x-6 pt-4 border-t border-gray-300 w-full justify-center">
-                  <Link href="/profile" className="text-gray-600 hover:text-gray-800">
+                  <Link
+                    href="/profile"
+                    className="text-gray-600 hover:text-gray-800"
+                  >
                     <User size={24} className="hover:text-blue-500" />
                   </Link>
                   <Link href="/" className="text-gray-600 hover:text-gray-800">
                     <Search size={24} className="hover:text-red-500" />
                   </Link>
 
-                  <Link href="/wishlist" className="text-gray-600 hover:text-gray-800 relative">
+                  {/* Admin Panel Icon using Iconify */}
+          <Link
+            href="https://furniro-admin-panel-sabehshaikhs-projects.vercel.app/"
+            target="_blank"
+            className="text-gray-600 hover:text-gray-800"
+          >
+            <Icon
+              icon="mdi:account-cog"
+              width="24"
+              className="hover:text-red-500 transition-colors duration-200"
+            />
+          </Link>
+
+
+                  <Link
+                    href="/wishlist"
+                    className="text-gray-600 hover:text-gray-800 relative"
+                  >
                     <Heart size={24} className="hover:text-red-500" />
                     {wishlistCount > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -117,7 +158,10 @@ const Navbar = () => {
                   </Link>
 
                   {/* Cart Icon */}
-                  <Link href="/cart" className="relative text-gray-600 hover:text-gray-800">
+                  <Link
+                    href="/cart"
+                    className="relative text-gray-600 hover:text-gray-800"
+                  >
                     <ShoppingCart size={24} className="hover:text-red-500" />
                     {cartCount > 0 && (
                       <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -133,25 +177,40 @@ const Navbar = () => {
 
         {/* Nav Links for Larger Screens */}
         <div className="hidden md:flex justify-evenly space-x-16 items-center">
-          <Link href="/" className="text-black font-medium leading-6 text-[16px]">
+          <Link
+            href="/"
+            className="text-black font-medium leading-6 text-[16px]"
+          >
             Home
           </Link>
-          <Link href="/shop" className="text-black font-medium leading-6 text-[16px]">
+          <Link
+            href="/shop"
+            className="text-black font-medium leading-6 text-[16px]"
+          >
             Shop
           </Link>
-          <Link href="/analytics" className="text-black font-medium leading-6 text-[16px]">
+          <Link
+            href="/analytics"
+            className="text-black font-medium leading-6 text-[16px]"
+          >
             Analytics
           </Link>
-          <Link href="/blog" className="text-black font-medium leading-6 text-[16px]">
+          <Link
+            href="/blog"
+            className="text-black font-medium leading-6 text-[16px]"
+          >
             Blog
           </Link>
-          <Link href="/contact" className="text-black font-medium leading-6 text-[16px]">
+          <Link
+            href="/contact"
+            className="text-black font-medium leading-6 text-[16px]"
+          >
             Contact
           </Link>
         </div>
 
         {/* Right Section (Profile, Search, Heart, Cart Icons) */}
-        <div className="hidden md:flex items-center space-x-6">
+        <div className="hidden md:flex items-center space-x-4">
           <Link href="/profile" className="text-gray-600 hover:text-gray-800">
             <User size={24} className="hover:text-blue-500" />
           </Link>
@@ -159,7 +218,23 @@ const Navbar = () => {
             <Search size={24} className="hover:text-red-500" />
           </Link>
 
-          <Link href="/wishlist" className="text-gray-600 hover:text-gray-800 relative">
+          {/* Admin Panel Icon using Iconify */}
+          <Link
+            href="https://furniro-admin-panel-sabehshaikhs-projects.vercel.app/"
+            target="_blank"
+            className="text-gray-600 hover:text-gray-800"
+          >
+            <Icon
+              icon="mdi:account-cog"
+              width="24"
+              className="hover:text-red-500 transition-colors duration-200"
+            />
+          </Link>
+
+          <Link
+            href="/wishlist"
+            className="text-gray-600 hover:text-gray-800 relative"
+          >
             <Heart size={24} className="hover:text-red-500" />
             {wishlistCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
@@ -169,7 +244,10 @@ const Navbar = () => {
           </Link>
 
           {/* Cart Icon */}
-          <Link href="/cart" className="relative text-gray-600 hover:text-gray-800">
+          <Link
+            href="/cart"
+            className="relative text-gray-600 hover:text-gray-800"
+          >
             <ShoppingCart size={24} className="hover:text-red-500" />
             {cartCount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
