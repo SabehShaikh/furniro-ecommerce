@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { Search, Heart, ShoppingCart, User, Settings } from "lucide-react";
+import { Search, Heart, ShoppingCart, User} from "lucide-react";
 import {
   Sheet,
   SheetContent,
